@@ -81,39 +81,6 @@ AddEventHandler('pa:kneelhu',
   end
 )
 
---  _____           _ _                        _                 _   _
--- |  __ \         | (_)           /\         (_)               | | (_)
--- | |__) |__ _  __| |_  ___      /  \   _ __  _ _ __ ___   __ _| |_ _  ___  _ __
--- |  _  // _` |/ _` | |/ _ \    / /\ \ | '_ \| | '_ ` _ \ / _` | __| |/ _ \| '_ \
--- | | \ \ (_| | (_| | | (_) |  / ____ \| | | | | | | | | | (_| | |_| | (_) | | | |
--- |_|  \_\__,_|\__,_|_|\___/  /_/    \_\_| |_|_|_| |_| |_|\__,_|\__|_|\___/|_| |_|
-
-RegisterNetEvent('pa:radio')
-
-AddEventHandler('pa:radio',
-  function()
-    local ped = GetPlayerPed(-1)
-
-    if (DoesEntityExist(ped) and not IsEntityDead(ped)) then
-      Citizen.CreateThread(
-        function()
-          RequestAnimDict("random@arrests")
-          while (not HasAnimDictLoaded("random@arrests")) do
-            Citizen.Wait(100)
-          end
-          if IsEntityPlayingAnim(ped, "random@arrests", "generic_radio_chatter", 3) then
-            ClearPedSecondaryTask(ped)
-            SetCurrentPedWeapon(ped, GetHashKey("WEAPON_UNARMED"), true)
-          else
-            TaskPlayAnim(ped, "random@arrests", "generic_radio_chatter", 8.0, 2.5, -1, 49, 0, 0, 0, 0)
-            SetCurrentPedWeapon(ped, GetHashKey("WEAPON_UNARMED"), true)
-          end
-        end
-      )
-    end
-  end
-)
-
 --  _____ _ _   _   _             
 -- / ____(_) | | | (_)            
 --| (___  _| |_| |_ _ _ __   __ _ 
@@ -183,60 +150,6 @@ AddEventHandler('pa:liedown',
             BlockControls = true
             TaskPlayAnim(ped, "mini@cpr@char_b@cpr_str", "cpr_kol_idle", 8.0, 2.5, -1, 1, 0, 0, 0, 0)
             SetCurrentPedWeapon(ped, GetHashKey("WEAPON_UNARMED"), true)
-          end
-        end
-      )
-    end
-  end
-)
-
---   _____ _____  _____  
---  / ____|  __ \|  __ \ 
--- | |    | |__) | |__) |
--- | |    |  ___/|  _  / 
--- | |____| |    | | \ \ 
---  \_____|_|    |_|  \_\
-
-RegisterNetEvent('pa:cpr')
-local DoingCPR = false
-
-AddEventHandler('pa:cpr',
-  function()
-    local ped = GetPlayerPed(-1)
-
-    if (DoesEntityExist(ped) and not IsEntityDead(ped)) then
-      Citizen.CreateThread(
-        function()
-          RequestAnimDict("mini@cpr@char_a@cpr_str")
-          RequestAnimDict("mini@cpr@char_a@cpr_def")
-          while (not HasAnimDictLoaded("mini@cpr@char_a@cpr_str")) do
-            Citizen.Wait(100)
-          end
-          while (not HasAnimDictLoaded("mini@cpr@char_a@cpr_def")) do
-            Citizen.Wait(100)
-          end
-          if IsEntityPlayingAnim(ped, "mini@cpr@char_a@cpr_str", "cpr_pumpchest", 3) then
-            DoingCPR = false
-            ClearPedTasksImmediately(ped)
-            ClearPedTasks(ped)
-            ClearPedSecondaryTask(ped)
-						SetCurrentPedWeapon(ped, GetHashKey("WEAPON_UNARMED"), true)
-						BlockControls = false
-          else
-						BlockControls = true
-            DoingCPR = true
-
-            TaskPlayAnim(ped, "mini@cpr@char_a@cpr_str", "cpr_kol", 8.0, 0, -1, 0, 0, 0, 0, 0) -- CPR Breath (play first) mini@cpr@char_a@cpr_def  cpr_kol 7466 
-            if DoingCPR == false then
-              return
-            end
-            Wait(7466)
-            TaskPlayAnim(ped, "mini@cpr@char_a@cpr_str", "cpr_kol_to_cpr", 8.0, 0, -1, 0, 0, 0, 0, 0) -- CPR Breath (play first) mini@cpr@char_a@cpr_def  cpr_kol 7466 
-            if DoingCPR == false then
-              return
-            end
-            Wait(1566)
-            TaskPlayAnim(ped, "mini@cpr@char_a@cpr_str", "cpr_pumpchest", 8.0, 0, -1, 1, 0, 0, 0, 1) -- CPR Chest Pump (play second) mini@cpr@char_a@cpr_st cpr_pumpchest 1000
           end
         end
       )
